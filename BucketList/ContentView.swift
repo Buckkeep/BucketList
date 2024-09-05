@@ -4,7 +4,7 @@
 //
 //  Created by Buhecha, Neeta on 05/09/2024.
 //
-//  BucketList app - Improving Map Annotations
+//  BucketList app - Selecting and editing map annotations
 //
 
 import MapKit
@@ -13,6 +13,8 @@ import SwiftUI
 struct ContentView: View {
     
     @State private var locations = [Location]()
+    
+    @State private var selectedPlace: Location?
     
     let startPosition = MapCameraPosition.region(
         MKCoordinateRegion(
@@ -32,6 +34,9 @@ struct ContentView: View {
                             .frame(width: 44, height: 44)
                             .background(.white)
                             .clipShape(.circle)
+                            .onLongPressGesture {
+                                selectedPlace = location
+                            }
                     }
                 }
             }
@@ -39,6 +44,13 @@ struct ContentView: View {
                     if let coordinate = proxy.convert(position, from: .local) {
                         let newLocation = Location(id: UUID(), name: "New location", description: "", latitude: coordinate.latitude, longitude: coordinate.longitude)
                         locations.append(newLocation)
+                    }
+                }
+                .sheet(item: $selectedPlace) { place in
+                    EditView(location: place) { newLocation in
+                        if let index = locations.firstIndex(of: place) {
+                            locations[index] = newLocation
+                        }
                     }
                 }
         }
