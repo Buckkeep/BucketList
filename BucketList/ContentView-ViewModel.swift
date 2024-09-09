@@ -9,13 +9,23 @@ import CoreLocation
 import Foundation
 import LocalAuthentication
 import MapKit
+import _MapKit_SwiftUI
 
 extension ContentView {
     @Observable
     class ViewModel {
+        
         private(set) var locations: [Location]
         var selectedPlace: Location?
         var isUnlocked = false
+        var isHybrid: Bool = false
+        
+        var mapStyle: MapStyle {
+            guard isHybrid else {
+                return .hybrid
+            }
+            return .standard
+        }
         
         let savePath = URL.documentsDirectory.appending(path: "SavedPlaces")
         
