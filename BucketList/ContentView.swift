@@ -23,7 +23,7 @@ struct ContentView: View {
     
     var body: some View {
         if viewModel.isUnlocked {
-            VStack {
+            NavigationStack {
                 MapReader { proxy in
                     Map(initialPosition: startPosition) {
                         ForEach(viewModel.locations) { location in
@@ -52,9 +52,15 @@ struct ContentView: View {
                     }
                     .mapStyle(viewModel.mapStyle)
                 }
-                Button("Change Map View") {
-                    viewModel.isHybrid.toggle()
-                }
+                .toolbar {
+                    Button("Toggle Map Style") {
+                        viewModel.isHybrid.toggle()
+                    }
+            }
+            }
+            .alert(isPresented: $viewModel.hasError) {
+                Alert(title: Text("\($viewModel.errorMessage)"))
+                /*Text("\($viewModel.errorMessage)")*/
             }
         } else {
             Button("Unlock Places", action: viewModel.authenticate)

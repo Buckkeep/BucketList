@@ -19,6 +19,8 @@ extension ContentView {
         var selectedPlace: Location?
         var isUnlocked = false
         var isHybrid: Bool = false
+        var hasError: Bool = false
+        var errorMessage: String = ""
         
         var mapStyle: MapStyle {
             guard isHybrid else {
@@ -68,16 +70,18 @@ extension ContentView {
             
             if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
                 let reason = "Please authenticate yourself to unlock your places"
-                
+                if error != nil {
+                    errorMessage = "There was an error"
+                }
                 context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
                     if success {
                         self.isUnlocked = true
                     } else {
-                        // error
+                        self.hasError = true
                     }
                 }
             } else {
-                // no biometrics 
+                self.hasError = true
             }
         }
     }
