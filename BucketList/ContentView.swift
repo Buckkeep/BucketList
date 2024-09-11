@@ -60,7 +60,6 @@ struct ContentView: View {
             }
             .alert(isPresented: $viewModel.hasError) {
                 Alert(title: Text("\($viewModel.errorMessage)"))
-                /*Text("\($viewModel.errorMessage)")*/
             }
         } else {
             Button("Unlock Places", action: viewModel.authenticate)
